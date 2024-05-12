@@ -1,0 +1,68 @@
+#include "../../operators_comparison/s21_operators_comparison.h"
+#include "../get/s21_get_tools.h"
+#include "../set/s21_set_tools.h"
+#include "s21_math_tools.h"
+
+void sub_decimals(s21_decimal value_1, s21_decimal value_2,
+                  s21_decimal *result) {
+  set_zero_decimal(result);
+  int res = 0;
+  int carry = 0;
+  int size_dec = s21_BitsPowerAndSign - 1;
+  while (get_decimal_bit(value_1, size_dec) != 1) {
+    size_dec--;
+  }
+  for (int i = 0; i <= size_dec; i++) {
+    int x = (int)get_decimal_bit(value_1, i);
+    int y = (int)get_decimal_bit(value_2, i);
+    res = x - y - carry;
+    if (res < 0) {
+      carry = 1;
+    } else {
+      carry = 0;
+    }
+    res = abs(res);
+    set_decimal_bit(result, i, res % 2);
+  }
+}
+
+int signed_subtraction(s21_decimal value_1, s21_decimal value_2,
+                       s21_decimal *result) {
+  int v1_sign = get_decimal_sign(value_1);
+  int v2_sign = get_decimal_sign(value_2);
+  int answer = s21_ArithmeticOK;
+
+  if (v1_sign != v2_sign) {
+    set_decimal_sign(&value_1, s21_Positive);
+    set_decimal_sign(&value_2, s21_Positive);
+    answer = add_decimals(value_1, value_2, result);
+    if (answer == s21_ArithmeticOK) {
+      if (v1_sign == s21_Positive && v2_sign == s21_Negative)
+        set_decimal_sign(result, s21_Positive);
+      else
+        set_decimal_sign(result, s21_Negative);
+    } else {
+      set_zero_decimal(result);
+      set_decimal_sign(result, s21_Positive);
+    }
+  } else {
+    if (v1_sign == s21_Positive) {
+      if (s21_is_greater_or_equal(value_1, value_2)) {
+        sub_decimals(value_1, value_2, result);
+        set_decimal_sign(result, s21_Positive);
+      } else {
+        sub_decimals(value_2, value_1, result);
+        set_decimal_sign(result, s21_Negative);
+      }
+    } else {
+      if (s21_abs_greater(value_1, value_2)) {
+        sub_decimals(value_1, value_2, result);
+        set_decimal_sign(result, s21_Negative);
+      } else {
+        sub_decimals(value_2, value_1, result);
+        set_decimal_sign(result, s21_Positive);
+      }
+    }
+  }
+  return answer;
+}
