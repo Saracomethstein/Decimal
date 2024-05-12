@@ -1,6 +1,6 @@
-#include "s21_math_tools.h"
+#include "math_tools.h"
 
-void decimal_copy(s21_decimal src, s21_decimal *dst) {
+void decimal_copy(decimal src, decimal *dst) {
   for (int i = 0; i < 4; i++) {
     dst->bits[i] = src.bits[i];
   }

@@ -1,9 +1,9 @@
-#include "../tools/math_helper/s21_math_tools.h"
-#include "../tools/set/s21_set_tools.h"
-#include "s21_converters.h"
+#include "../tools/math_helper/math_tools.h"
+#include "../tools/set/set_tools.h"
+#include "converters.h"
 
-int s21_from_float_to_decimal(float src, s21_decimal *dst) {
-  int answer = s21_ConvertOK;
+int from_float_to_decimal(float src, decimal *dst) {
+  int answer = ConvertOK;
   int sign = get_float_sign(src);
   float check_sign =
       (sign == 1) ? -1 : 1;  // otherwise can cause overloading,
@@ -14,7 +14,7 @@ int s21_from_float_to_decimal(float src, s21_decimal *dst) {
   if (check_errors(src, dst) != 0)
     answer = check_errors(src, dst);
   else if (src == 0.0) {
-    answer = s21_ConvertOK;
+    answer = ConvertOK;
     set_zero_decimal(dst);
     set_decimal_sign(dst, sign);
   } else {
@@ -27,38 +27,38 @@ int s21_from_float_to_decimal(float src, s21_decimal *dst) {
   return answer;
 }
 
-void round_power10(s21_decimal *decimal) {
-  s21_decimal tmp = {{10, 0, 0, 0}};
-  s21_decimal result;
+void round_power10(decimal *value) {
+  decimal tmp = {{10, 0, 0, 0}};
+  decimal result;
   set_zero_decimal(&result);
 
-  mul_decimals(*decimal, tmp, &result);
-  decimal_copy(result, decimal);
+  mul_decimals(*value, tmp, &result);
+  decimal_copy(result, value);
 }
 
-int check_errors(float src, s21_decimal *dst) {
-  int answer = s21_ConvertOK;
+int check_errors(float src, decimal *dst) {
+  int answer = ConvertOK;
   int sign = src < 0.0 ? 1 : 0;
   if (!dst)
-    answer = s21_ConvertERROR;
-  else if (src == S21_INFINITY || src == S21_NEGATIVE_INFINITY ||
-           src == S21_NAN) {
-    answer = s21_ConvertERROR;
+    answer = ConvertERROR;
+  else if (src == INFINITY_DEC || src == NEGATIVE_INFINITY_DEC ||
+           src == NAN_DEC) {
+    answer = ConvertERROR;
     set_zero_decimal(dst);
     set_decimal_sign(dst, sign);
   } else if (fabsf(src) > MAX_FLT) {
-    answer = s21_ConvertERROR;
+    answer = ConvertERROR;
     set_zero_decimal(dst);
     set_decimal_sign(dst, sign);
   } else if (fabsf(src) < MIN_FLT && src != 0) {
-    answer = s21_ConvertERROR;
+    answer = ConvertERROR;
     set_zero_decimal(dst);
     set_decimal_sign(dst, sign);
   }
   return answer;
 }
 
-void round_with_zeroes(float src, s21_decimal *dst, int integer_part_length) {
+void round_with_zeroes(float src, decimal *dst, int integer_part_length) {
   unsigned int result =
       (unsigned int)(fabsf(src) /
                      pow(10, integer_part_length - SIGNIFICAND_PART));
@@ -68,7 +68,7 @@ void round_with_zeroes(float src, s21_decimal *dst, int integer_part_length) {
   set_decimal_power(dst, 0);
 }
 
-void round_default_float(float src, s21_decimal *dst, int integer_part_length) {
+void round_default_float(float src, decimal *dst, int integer_part_length) {
   int sign = get_float_sign(src);
   float check_sign = sign == 1 ? -1 : 1;
   int power_of_ten =

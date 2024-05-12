@@ -1,13 +1,13 @@
-#include "../../another_functions/s21_another_func.h"
-#include "../../operators_comparison/s21_operators_comparison.h"
-#include "../get/s21_get_tools.h"
-#include "../set/s21_set_tools.h"
-#include "s21_math_tools.h"
+#include "../../another_functions/another_func.h"
+#include "../../operators_comparison/operators_comparison.h"
+#include "../get/get_tools.h"
+#include "../set/set_tools.h"
+#include "math_tools.h"
 
-int even(s21_decimal value) {
+int even(decimal value) {
   int answer = 0;
-  s21_decimal res = {0};
-  set_decimal_power(&value, s21_MinDegree);
+  decimal res = {0};
+  set_decimal_power(&value, MinDegree);
   div_decimal_integers(value, decimal_two(), &res);
   if (get_decimal_power(res) > 0) {
     answer = 1;
@@ -15,33 +15,33 @@ int even(s21_decimal value) {
   return answer;
 }
 
-void bank_round(s21_decimal value, s21_decimal fractional,
-                s21_decimal after_trunc, s21_decimal *result) {
+void bank_round(decimal value, decimal fractional, decimal after_trunc,
+                decimal *result) {
   int power = get_decimal_power(value);
   for (int i = 0; i < power - 1; ++i) {
     mul_decimals(fractional, decimal_ten(), &fractional);
   }
-  if (s21_is_equal(fractional, decimal_five()) == s21_True) {
+  if (is_equal(fractional, decimal_five()) == True) {
     if (even(after_trunc) == 0) {
       decimal_copy(after_trunc, result);
     } else {
       add_decimals(after_trunc, decimal_one(), result);
     }
-  } else if (s21_is_greater(fractional, decimal_five()) == s21_True) {
+  } else if (is_greater(fractional, decimal_five()) == True) {
     add_decimals(after_trunc, decimal_one(), result);
   } else {
     decimal_copy(after_trunc, result);
   }
-  set_decimal_power(result, s21_MinDegree);
+  set_decimal_power(result, MinDegree);
 }
 
-void bank(s21_decimal value, s21_decimal *result) {
-  s21_decimal fractional = {{0, 0, 0, 0}};
-  s21_decimal value_after_trunc = {{0, 0, 0, 0}};
-  s21_decimal copy = {0};
-  s21_decimal copy_val_after_trunc = {0};
+void bank(decimal value, decimal *result) {
+  decimal fractional = {{0, 0, 0, 0}};
+  decimal value_after_trunc = {{0, 0, 0, 0}};
+  decimal copy = {0};
+  decimal copy_val_after_trunc = {0};
   int power = get_decimal_power(value);
-  s21_truncate(value, &value_after_trunc);
+  truncate_dec(value, &value_after_trunc);
   decimal_copy(value_after_trunc, &copy_val_after_trunc);
 
   for (int i = 0; i < power; ++i) {

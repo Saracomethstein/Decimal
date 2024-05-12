@@ -1,5 +1,5 @@
-#include "s21_get_tools.h"
+#include "get_tools.h"
 
-int get_decimal_sign(s21_decimal value) {
-  return (value.bits[3] >> s21_MaxBits) & 0x01;
+int get_decimal_sign(decimal value) {
+  return (value.bits[3] >> MaxBits) & 0x01;
 }

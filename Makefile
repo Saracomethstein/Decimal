@@ -51,13 +51,13 @@ TRASH_FILES = $(wildcard	arithmetic_operators/*.o operators_comparison/*.o conve
 
 rwildcard = $(foreach d,$(wildcard $(1:=/*)),$(call rwildcard,$d,$2) $(filter $(subst *,%,$2),$d))
 
-all: $(OBJS) s21_decimal.a
+all: $(OBJS) decimal.a
 
 test: $(SRCS_TEST)
 	@$(CC) -o $@ $(TEST_FLAGS) `pkg-config --cflags --libs check` $(SRCS_TEST)
 	@./test
 
-s21_decimal.a:
+decimal.a:
 	$(CC) $(FLAGS) -c $(SRCS)
 	@ar rc $@ ./*.o
 	ranlib $@
@@ -88,9 +88,9 @@ style:
 										$(MAIN_FILES_MANUAL) \
 										$(MAIN_FILES_TESTS)
 
-.PHONY: clean s21_string.a gcov_report clang test
+.PHONY: clean decimal.a gcov_report clang test
 clean:
-	@rm -rf s21_decimal.a *.o *.gcno *.gcov *.gcda test \
+	@rm -rf decimal.a *.o *.gcno *.gcov *.gcda test \
 		*.png *.html cmd_line *.css *.info ./src *.out \
 		*.h.gch $(TRASH_FILES) trash/*.o trash/*.h.gch \
 		./united_tests/testing.o \

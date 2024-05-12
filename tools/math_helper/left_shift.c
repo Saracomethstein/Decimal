@@ -1,8 +1,8 @@
-#include "../get/s21_get_tools.h"
-#include "../set/s21_set_tools.h"
-#include "s21_math_tools.h"
+#include "../get/get_tools.h"
+#include "../set/set_tools.h"
+#include "math_tools.h"
 
-void left_shift(s21_decimal *dec, int shift) {
+void left_shift(decimal *dec, int shift) {
   for (int i = 0; i < shift; i++) {
     int dec_31 = (int)get_decimal_bit(*dec, 31);
     int dec_63 = (int)get_decimal_bit(*dec, 63);
